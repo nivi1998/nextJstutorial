@@ -1,0 +1,295 @@
+
+Next js:- React framework for production.
+:- there is no need to install extra packages in next js 
+why to learn next js:- It simplifies the process of building a react application for production.
+1> File based ROuting:- as per the file its create routes
+2> pre-rendering:- it create html of each page in advance . its seo friendly
+3> Api Routes:- we can create api using next js
+4> support for css modules
+5> Authentications:- 
+6> Dev and prod build system :- focus more on code and less on configurations.
+
+Routing in Next js:- when a file is addes to the pages folder in a project , it automatically becomes available  as a route.
+:- we create page in pages folder and its automatically create the routes.
+
+:- square bracket in file name create dynamic routes. for example create file name in bracket[filename].js
+
+:- we import useRouter hooks from next/routes to fetch the  product id.
+
+:- we use query object to have the id of the product.
+:- product id can be anythings like its should be string as well as number.
+like for eg:- if we type/ sweter :- then also its render the page of sweter.
+
+Link:- link components is used for client side routing means we can only use link in our applications. for link to outside the applications we use simple html routing.
+
+404 page:- if you pass wrong route next js by default show the 404 page
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Routing Summary:-
+:- Page based Routing:- after creating file inside page its simply create route as the file name
+:- Nested Routes:- nested folder structure, files will automatically routed in the same way in the url
+:- Dynamic Routes:- can be created by adding square brackets to a page name.
+:- Catch all routes
+:- link Components to navigate on click an elements
+:- useRouter hook's router.push method to navigate programmatically
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+~~~~~~~~~Pre- rendering & Data Fetching intro~~~~~~~
+Types of pre-rendering
+1> Static Generation:- is a method of pre rendering where html pages are generated at build time.
+:- html pages build in advanced when you build your application.
+static generation app;- blog pages, e-commerce product pages, documentations and marketing pages.
+
+    -without data
+    -with data
+    -incremental static generation
+    -dynamic parameter when fetching data
+
+:--- next js , by default will pre-render every  pages of out app.
+:- It automatically generated the html page statically.
+
+:- for production builds a pages will be pre rendered once when run the build command.
+
+:- In development mode, the pages is pre-rendered for every request you make .
+
+2> Server side rendering
+    -data fetching with server side rendering
+    client-side data fetching
+    combining pre-rendering
+
+pre-rendering:- its means next js generate html page in advance instead of having it all done by client side javascript .
+
+:- in react first its show only the id of the root file and not showing any html pages(app is not loaded).
+:- in next js pre render the data when it run first time.
+
+why pre-render:- 
+1> its improves performance
+    :- in react we need to wait for js to be executed 
+    :- perhaps fetch data from external api and then render the ui. there is a wait time for the user.
+    :- with pre render page, the html is already generated and load faster.
+2> pre- rendering helps with seo
+    :- if you re building blog  or an e-commerce site, seo is a concern.
+    :- with react app, if the search engine hits your page, it only sees a div tag with id equal to root.
+    :- if search engine hits a pre rendered pages though , all the content is present in the source code which will help index that page.
+    if seo is concern to our app then pre rendering is in first concern.
+
+~~~~~~~~~~~~getStatic Props functions~~~~~~~~~~~~~~~~~
+
+1>- its only run on the server side -- thats why if we console the data then data is shown in terminal.
+:- function will never run on client side.
+:- code you write inside the getStaticProps wont even be included in the js bundle that is sent to the browser.
+
+2> we can write server side code directly in getStatic props
+:- Acessing the file system using the fs module or quering a database can be done inside getstaticprops.
+
+3>- getStaticprops is allowed only in a page and cannot be run from a regular components file.
+:- it is only used for pre-rendering and not client side data fetching
+
+4>- getStaticprops should return object and object should contain a props key which is an object.
+
+5>- getStaticProps will run at build time
+
+
+~~~~~~~~~~~~Link Pre-fetching~~~~~~~~~~~~~~~~
+
+:- Any <link /> components in the viewport (initially or through scroll) will be prefetched by default (including the corresponding data) for pages using Static Generations.
+
+:- when a page with getStaticProps is pre-rendered at build time , in adddition to the pages HTMl File, Next.js Generates a json file holding the results of running getStaticProps.
+
+:- json file will be used in client side routing through next/link , or next /router
+
+:- when you navigate to a page that pre rendered using getstaticprops, next.js fetches the JSON file (pre-computed at build time) and uses it as the props to create the pages components client-side.
+
+:- Client-side page transitions will not call getstaticprops as only the exported JSON is used
+
+
+~~~~~~~~~~~~~After Build theproject pages render differently~~~~~~~~~~~~~~~
+lemda sign (server):- Server side render at runtime(uses getIntialprops or getServerSideProps)
+
+hollow Circle (Static):- automatically renderd as static html(uses no initial props):- for ex:-  home page, 404 pages automatic generated pages.
+filed circle (SSg):- automatically generated as static html + json (uses get StaticProps to fetch external data)  :- means pages which have html and apis call comes under this.
+
+
+~~~~~~~~~~~~~getStaticPaths And Fallback ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+there are three value we can assign in fallback
+1> fallback : true, :- path returns from the getStatic Paths will be rendered to html at build time by getStaticProps.
+
+:-> paths that have not been generated at build time will not results in a 404 pages. instead next js will serve a fallback version of the pages on the first request to such a path.
+
+:-> in a background,next js will statically generated the requested path html and json. this includes running getStaticProps.
+
+
+2> fallback: false, :- path returns from the getStatic Paths will be rendered to html at build time by getStaticProps.
+
+:-> if Fallback is set to false, then any paths not returned by getStaticPaths will results in a 404 pages
+
+3> fallback: blocking :-> path returns from the getStatic Paths will be rendered to html at build time by getStaticProps.
+
+:-> paths that have not been generated at build time will not results 404 pages, instead on the first request, next js wil render the pages on the server and return the generated html.
+:-> when thats done the browser receives the html for the generated path. from the user perspective, it will transition from the browser is requesting the page to the full page is loaded. there is no flash of loading / fallback state. 
+:-> at the same time next keeps track of the new list of prerendering pages. subsequents request to the same path will serve the generated page, just like other pages pre-rendered at build time.
+
+~~~~~~Static Generation & Issue ~~~~~~~~~~~~~
+video29
+
+~~increamental Static Regeneration~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+video 30
+
+
+~~~~~~~~~~~~Stale while Revalidate~~~~~~~~~~
+
+~~~~~~~~~~Regeneration~~~~~~~~~~~~~
+ a re-generation is initiated only if a user makes a request after the revalidate time
+
+ :-> if a user visit our product details pages but there is no other user hitting that page the entire day, the regeneration does not happen.
+
+~~~~~~~~~~~~~~Two Forms Of Pre-rendering~~~~~~~~~~~~~~~~~~~~~~
+
+1>static generation
+problem with static generation:- we cannot fetch data at request time
+:-> we dont get access to the incoming request
+
+2>sever side rendering(ssr)
+:-> Next js allow you to pre render a page not at build time but at request time.
+
+:->The HTML is generated for every incoming request
+(video 31 for eg)
+
+:- ssr is a form of pre- rendering where the html is generated at request time.
+
+:-> ssr is required when you need to fetch data per request and also when you need to fetch personalised data keeping in mind seo.
+
+~~~~~~~~~~~~getServerSideProps~~~~~~~~~~~~~~
+
+1> getServerSideProps runs only on the server side.
+:-> The function will never run client side.
+:-> the code you write inside the getserversideProps wont even be included in the js bundle that is sent to the browser.
+
+2> you can write server side code directly in getServerSideProps.
+
+:-> code that we write in node js that accessing the file system using the fs module  or querying a database can be done inside getServerSideProps.
+
+:-> dont have to worry about including API keys in getServerSideProps as that wont make it to the browser.
+
+3> getServerSideProps is allowed only in a page and cannot be run from a regular component file .
+:-> it is used for pre-rendering and not client side data fetching.
+
+4> getServerSideProps should return an object and object should contain a props key which is an object .
+ 5> getServerSideProps will run at request time .
+
+~~~~~~~~~~SWR(stale while revalidate~~~~~~~~~~~~~~~~
+
+:-> its basically a react hooks library for data fetching, it handle caching, revalidation, 
+
+
+~~~~~~~~~~~~~pre-rendering and data fetching summary~~~~~~~~~~
+
+:- pre rendering refers to the process of generating html in advance which results in better performance and seo next js support two forms of pre rendering - static deneration and server side rendering.
+
+Static generation
+~~~~~~~~~~~~~~~~~~~~
+:-> a method of pre-rendering where the html pages are genrated at the build time
+:-> pages can be built once, cached by a cdn and served to the clients almost instantly
+eg:- marketing or blogging site
+
+:-> for normal pages use getstaticprops function to fetch the data ahead of time.
+:-> for dynamic pages , you also need the getstaticpaths functions
+:->fallback: false | true | blocking
+:-> pages cannot be updated without a full re-build
+:- incremental static generation
+
+
+Server-side- rendering
+~~~~~~~~~~~~~~~~~~~~~~
+
+:-> fetch data at request time
+:-> personalized data based on user informations in the incoming request
+eg:- news listing page
+:-> getserversideprops function help with ssr data fetching.
+
+:->combining pre rendering with client side data fetching
+
+:-> shallow Routing:-
+
+~~~~~~~~~~~~~~API Routes~~~~~~~~~~~~
+:-> API routes features and how to create a basics API in next js
+:-> Handle GET requests
+:-> Handle Post requests
+:-> Dynamic Api routes
+:-> Handle DELETE requests
+:-> Catch all API routes
+
+:-> Next js is a full stack framework
+:-> we can write the fe code in react and also write apis that can be called by the front end code
+
+:-> Api routes allow you to create RESTful endpoints as part of your next js application folder structure
+
+:-> within the pages folder , you need to create a folder called api
+:-> within tht api folder you can defines all the apis for your applications
+
+:-> we can add buisness logic without needing to write any additional custom server code and without having to configure any Api routes
+
+:-> Next js gives you everythings you need to write full-stack react + node applications
+
+~~~~~~~~~~~~~Api Route Summmary ~~~~~~~~~~~~~~~
+
+:- Api route mechanism is similar as page based routing mechanism
+:- APIs  are associated with a route based on their file name
+:- Every API route exports a default function typically named as handler function
+
+:- the handler function receives the request and response as parameter
+:- cater to different request types like GET and POST using req.method
+:- Dynamic API routes
+:- Catch all API routes
+:- How to handle a delete request
+:- we should not call our own API routes for pre-rendering content.
+
+
+~~~~~~~~~~~~~~~~Styling in next js ~~~~~~~~~~~~~~~~~~~~
+Topic Cover in Styling:-
+:- Styling is essential to building any web application
+:- GLOBAL Styles
+:- Components Style
+:- SASS or SCSS
+:- CSS in js solution
+
+
+
+
+
+
+~~~~~~~~~~~~~~~~Next build, Start and export~~~~~~~~~~~~~~~~~~~~
+video 60
+
+
+~~~~~~~~~~~~~~~~~~~Preview Mode~~~~~~~~~~~~~~~~~~~
+help applications that rely on a cms
+:- CMS stand for content management system and is a 
+
+62video
+
+
+~~~~~~~~~~~~Authentication Section Intro~~~~~~~~~~~~~~~~~~
+:- What exactly does authentication entail when it comes to next js?
+:- Next-auth library
+:- Authenticating with GitHub
+:- Handle sign in, sign out and securing the application
+:- Howto work with database like Mongodb
+
+
+~~~~~~~~~~~~Authentication in next js ~~~~~~~~~~~~~~
+:- user
+:- identity and acess
+:- identity  verifies who the user is
+:- acess verifies what permision user has
+:- Identity - Authentication
+Acess:- Authorization
+
+:- Authentication from three perspective
+:-> Client side Authentication
+:- server side authentication
+:- Api route authentication
+
+
+
